@@ -1,16 +1,16 @@
 #!/usr/bin/env python
-import roslib; roslib.load_manifest('bsm_slam_drive')
+import roslib; roslib.load_manifest('bsm_slam')
 import rospy
 import tf.transformations
-from geometry_msgs.msg import Twist
+#from geometry_msgs.msg import Twist
 
-from pyax12.connection import Connection
-from bsmLib.vector import vector
+#from pyax12.connection import Connection
+#from bsmLib.vector import vector
 
-DEVICE = '/dev/ttyACM0' # Ax-12 Servos
+#DEVICE = '/dev/ttyACM0' # Ax-12 Servos
 
-L = (1, 2)
-R = (3, 4)
+#L = (1, 2)
+#R = (3, 4)
 
 def callback(msg):
     rospy.loginfo("Received a /cmd_vel message!")
