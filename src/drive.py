@@ -15,11 +15,11 @@ class driveAx:
         for i in (l + r):
             __set_continuous(i)
 
-    def __set_continuous(motor_id):
+    def __set_continuous(self, motor_id):
         self.sc.set_cw_angle_limit(motor_id, 0, degrees=False)
         self.sc.set_ccw_angle_limit(motor_id, 0, degrees=False)
 
-    def __speedConvert(speed):
+    def __speedConvert(self, speed):
         if(speed > 0.0):
             speed = 1024 + speed * 1023
             return speed
@@ -30,41 +30,37 @@ class driveAx:
             speed = 0
             return speed
 
-    def forward(speed):
+    def forward(self, speed):
         for i in (self.L + self.R):
             self.sc.set_speed(i, __speedConvert(speed))
 
-    def left(speed):
+    def left(self, speed):
         for i in (self.L):
             self.sc.set_speed(i, __speedConvert(speed))
 
-    def right(speed):
+    def right(self, sspeed):
         for i in (self.R):
             self.sc.set_speed(i, __speedConvert(speed))
 
-class rosDrive:
+drive = driveAx()
 
-    def __init__(self, drive = driveAx()):
-        self.DRIVE = drive
+def drive(x, z):
+    if(z > 0):
+        drive.right(z)
+    elif(z < 0):
+        drive.left(z * -1)
+    drive.forward(x)
 
-    def drive(self, x, z):
-        if(z > 0):
-            self.DRIVE.right(z)
-        elif(z < 0):
-            self.DRIVE.left(z * -1)
-        self.DRIVE.forward(x)
+def callback(msg):
+    rospy.loginfo("Received a /cmd_vel message!")
+    rospy.loginfo("Linear Components: [%f, %f, %f]"%(msg.linear.x, msg.linear.y, msg.linear.z))
+    rospy.loginfo("Angular Components: [%f, %f, %f]"%(msg.angular.x, msg.angular.y, msg.angular.z))
+    drive(msg.linear.x, msg.angular.z)
 
-    def callback(self, msg):
-        rospy.loginfo("Received a /cmd_vel message!")
-        rospy.loginfo("Linear Components: [%f, %f, %f]"%(msg.linear.x, msg.linear.y, msg.linear.z))
-        rospy.loginfo("Angular Components: [%f, %f, %f]"%(msg.angular.x, msg.angular.y, msg.angular.z))
-        self.drive(msg.linear.x, msg.angular.z)
-
-    def listener(self):
-        rospy.init_node('cmd_vel_listener')
-        rospy.Subscriber("/cmd_vel", Twist, self.callback)
-        rospy.spin()
+def listener()):
+    rospy.init_node('cmd_vel_listener')
+    rospy.Subscriber("/cmd_vel", Twist, self.callback)
+    rospy.spin()
 
 if __name__ == '__main__':
-    drive = rosDrive()
-    drive.listener()
+    listener()
