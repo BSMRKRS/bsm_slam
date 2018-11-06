@@ -2,35 +2,69 @@
 import roslib; roslib.load_manifest('bsm_slam')
 import rospy
 import tf.transformations
-#from geometry_msgs.msg import Twist
+from geometry_msgs.msg import Twist
 
-#from pyax12.connection import Connection
-#from bsmLib.vector import vector
+from pyax12.connection import Connection
 
-#DEVICE = '/dev/ttyACM0' # Ax-12 Servos
+class driveAx:
 
-#L = (1, 2)
-#R = (3, 4)
+    def __init__(self, l = (1, 2), r = (3, 4), device='/dev/ttyACM0', baud=1000000):
+        self.sc = Connection(port=device, baudrate=baud)
+        self.L = l
+        self.R = r
+        for i in (l + r):
+            __set_continuous(i)
 
-def callback(msg):
-    rospy.loginfo("Received a /cmd_vel message!")
-    rospy.loginfo("Linear Components: [%f, %f, %f]"%(msg.linear.x, msg.linear.y, msg.linear.z))
-    rospy.loginfo("Angular Components: [%f, %f, %f]"%(msg.angular.x, msg.angular.y, msg.angular.z))
+    def __set_continuous(motor_id):
+        self.sc.set_cw_angle_limit(motor_id, 0, degrees=False)
+        self.sc.set_ccw_angle_limit(motor_id, 0, degrees=False)
 
-    # Do velocity processing here:
-    # Use the kinematics of your robot to map linear and angular velocities into motor commands
+    def __speedConvert(speed):
+        if(speed > 0.0):
+            speed = 1024 + speed * 1023
+            return speed
+        elif(speed < 0.0):
+            speed = -speed * 1023
+            return speed
+        else:
+            speed = 0
+            return speed
 
-    #v_l = ...
-    #v_r = ...
+    def forward(speed):
+        for i in (self.L + self.R):
+            self.sc.set_speed(i, __speedConvert(speed))
 
-    # Then set your wheel speeds (using wheel_left and wheel_right as examples)
-    #wheel_left.set_speed(v_l)
-    #wheel_right.set_speed(v_r)
+    def left(speed):
+        for i in (self.L):
+            self.sc.set_speed(i, __speedConvert(speed))
 
-def listener():
-    rospy.init_node('cmd_vel_listener')
-    rospy.Subscriber("/cmd_vel", Twist, callback)
-    rospy.spin()
+    def right(speed):
+        for i in (self.R):
+            self.sc.set_speed(i, __speedConvert(speed))
+
+class rosDrive:
+
+    def __init__(self, drive = driveAx()):
+        self.DRIVE = drive
+
+    def drive(self, x, z):
+        if(z > 0):
+            self.DRIVE.right(z)
+        elif(z < 0):
+            self.DRIVE.left(z * -1)
+        self.DRIVE.forward(x)
+
+    def callback(self, msg):
+        rospy.loginfo("Received a /cmd_vel message!")
+        rospy.loginfo("Linear Components: [%f, %f, %f]"%(msg.linear.x, msg.linear.y, msg.linear.z))
+        rospy.loginfo("Angular Components: [%f, %f, %f]"%(msg.angular.x, msg.angular.y, msg.angular.z))
+        self.drive(msg.linear.x, msg.angular.z)
+
+    def listener(self):
+        rospy.init_node('cmd_vel_listener')
+        rospy.Subscriber("/cmd_vel", Twist, self.callback)
+        rospy.spin()
 
 if __name__ == '__main__':
-    listener()
+    drive = rosDrive()
+    drive.listener()
