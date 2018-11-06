@@ -6,50 +6,56 @@ from geometry_msgs.msg import Twist
 
 from pyax12.connection import Connection
 
-class driveAx:
+# class driveAx:
 
-    def __init__(self, l = (1, 2), r = (3, 4), device='/dev/ttyACM0', baud=1000000):
-        self.sc = Connection(port=device, baudrate=baud)
-        self.L = l
-        self.R = r
-        for i in (l + r):
-            __set_continuous(i)
+# def __init__(self, l = (1, 2), r = (3, 4), device='/dev/ttyACM0', baud=1000000):
+#     self.sc = Connection(port=device, baudrate=baud)
+#     self.L = l
+#     self.R = r
+#     for i in (l + r):
+#         __set_continuous(i)
 
-    def __set_continuous(self, motor_id):
-        self.sc.set_cw_angle_limit(motor_id, 0, degrees=False)
-        self.sc.set_ccw_angle_limit(motor_id, 0, degrees=False)
+l = (1, 2)
+r = (3, 4)
 
-    def __speedConvert(self, speed):
-        if(speed > 0.0):
-            speed = 1024 + speed * 1023
-            return speed
-        elif(speed < 0.0):
-            speed = -speed * 1023
-            return speed
-        else:
-            speed = 0
-            return speed
+device = '/dev/ax'
+buad = 1000000
 
-    def forward(self, speed):
-        for i in (self.L + self.R):
-            self.sc.set_speed(i, __speedConvert(speed))
+def __set_continuous(self, motor_id):
+    self.sc.set_cw_angle_limit(motor_id, 0, degrees=False)
+    self.sc.set_ccw_angle_limit(motor_id, 0, degrees=False)
 
-    def left(self, speed):
-        for i in (self.L):
-            self.sc.set_speed(i, __speedConvert(speed))
+def __speedConvert(self, speed):
+    if(speed > 0.0):
+        speed = 1024 + speed * 1023
+        return speed
+    elif(speed < 0.0):
+        speed = -speed * 1023
+        return speed
+    else:
+        speed = 0
+        return speed
 
-    def right(self, sspeed):
-        for i in (self.R):
-            self.sc.set_speed(i, __speedConvert(speed))
+def forward(self, speed):
+    for i in (self.L + self.R):
+        self.sc.set_speed(i, __speedConvert(speed))
 
-drive = driveAx()
+def left(self, speed):
+    for i in (self.L):
+        self.sc.set_speed(i, __speedConvert(speed))
+
+def right(self, sspeed):
+    for i in (self.R):
+        self.sc.set_speed(i, __speedConvert(speed))
+
+# drive = driveAx()
 
 def drive(x, z):
     if(z > 0):
-        drive.right(z)
+        right(z)
     elif(z < 0):
-        drive.left(z * -1)
-    drive.forward(x)
+        left(z * -1)
+    forward(x)
 
 def callback(msg):
     rospy.loginfo("Received a /cmd_vel message!")
