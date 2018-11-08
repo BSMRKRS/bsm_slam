@@ -1,8 +1,4 @@
-# Documenation & Repo don't include nav or exploration
-
-WIP
-
-# bsm_slam
+# bsm_slam (WIP)
 
 ROS package for bsm robotic's slam. Only tested on ROS Kinetic w/ Ubuntu 16.04
 
@@ -35,7 +31,6 @@ git clone https://github.com/ros-drivers/urg_node.git # Hokuyo
 git clone https://github.com/paulbovbel/frontier_exploration.git
 git clone https://github.com/avoss19/bsm_slam.git
 cd ~/catkin_ws
-rosdep install --from-paths src --ignore-src --rosdistro kinetic
 catkin_make
 ```
 

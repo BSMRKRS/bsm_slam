@@ -1,7 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import roslib; roslib.load_manifest('bsm_slam')
 import rospy
-import tf.transformations
+# import tf.transformations
 from geometry_msgs.msg import Twist
 
 from pyax12.connection import Connection
@@ -9,34 +9,49 @@ from pyax12.connection import Connection
 L = (1, 2)
 R = (3, 4)
 
-device = '/dev/ax'
-buad = 1000000
+device = '/dev/ttyACM1'
+# buad = 1000000
+
+sc = Connection(port='/dev/ttyACM1', baudrate=1000000)
 
 def set_continuous(motor_id):
     sc.set_cw_angle_limit(motor_id, 0, degrees=False)
     sc.set_ccw_angle_limit(motor_id, 0, degrees=False)
 
+for i in (L + R):
+    print(i)
+    set_continuous(int(i))
+
 def speedConvert(speed):
     if(speed > 0.0):
         speed = 1024 + speed * 1023
-        return speed
+        return int(speed)
     elif(speed < 0.0):
         speed = -speed * 1023
-        return speed
+        return int(speed)
     else:
         speed = 0
-        return speed
+        return int(speed)
 
 def forward(speed):
-    for i in (L + R):
-        sc.set_speed(i, speedConvert(speed))
-
-def left(speed):
+    print(speed)
     for i in (L):
         sc.set_speed(i, speedConvert(speed))
+    for i in (R):
+        sc.set_speed(i, speedConvert(-speed))
+
+def left(speed):
+    print(speed)
+    for i in (L):
+        sc.set_speed(i, speedConvert(-speed))
+    for i in (R):
+        sc.set_speed(i, speedConvert(-speed))
 
 def right(speed):
+    print(speed)
     for i in (R):
+        sc.set_speed(i, speedConvert(speed))
+    for i in (L):
         sc.set_speed(i, speedConvert(speed))
 
 # drive = driveAx()
@@ -60,6 +75,6 @@ def listener():
     rospy.spin()
 
 if __name__ == '__main__':
-    for i in (L + R):
-        set_continuous(i)
+    forward(0)
+    # left(.3)
     listener()
