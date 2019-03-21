@@ -6,13 +6,17 @@ from geometry_msgs.msg import Twist
 
 from pyax12.connection import Connection
 
+d = -1
+t = 1
+
+
 L = (1, 2)
 R = (3, 4)
 
 device = '/dev/ttyACM1'
 # buad = 1000000
 
-sc = Connection(port='/dev/ttyACM1', baudrate=1000000)
+sc = Connection(port='/dev/ax', baudrate=1000000)
 
 def set_continuous(motor_id):
     sc.set_cw_angle_limit(motor_id, 0, degrees=False)
@@ -23,6 +27,7 @@ for i in (L + R):
     set_continuous(int(i))
 
 def speedConvert(speed):
+    speed *= d
     if(speed > 0.0):
         speed = 1024 + speed * 1023
         return int(speed)
@@ -34,13 +39,17 @@ def speedConvert(speed):
         return int(speed)
 
 def forward(speed):
+    #speed *= d
+    #print("Forward: " + str(speed))
     print(speed)
     for i in (L):
-        sc.set_speed(i, speedConvert(speed))
-    for i in (R):
         sc.set_speed(i, speedConvert(-speed))
+    for i in (R):
+        sc.set_speed(i, speedConvert(speed))
 
 def left(speed):
+    #print("Left: " + str(speed))
+    speed *= (d * t)
     print(speed)
     for i in (L):
         sc.set_speed(i, speedConvert(-speed))
@@ -48,7 +57,8 @@ def left(speed):
         sc.set_speed(i, speedConvert(-speed))
 
 def right(speed):
-    print(speed)
+    speed *= (d * t)
+    #print("Right: " + speed)
     for i in (R):
         sc.set_speed(i, speedConvert(speed))
     for i in (L):
