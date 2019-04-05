@@ -23,4 +23,9 @@ Edit: `config/trajectory_planner.yaml`
 
 ## Change Max Distance of Waypoint Following
 
-Edit: `global_costmap_params.yaml` & `local_costmap_params`
+Edit: `config/global_costmap_params.yaml` & `config/local_costmap_params`
+
+## Change Motors
+
+Edit: `src/drive.py`
+Change Functions: `forward()`, `left()` & `right()`
