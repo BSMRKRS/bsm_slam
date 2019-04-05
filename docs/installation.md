@@ -2,7 +2,7 @@
 
 Installing and setting up SLAM for BSM robotics
 
-[Install](#install)
+[Install](#install) <br>
 [Setup Networking](#setup-networking)
 
 ## Install

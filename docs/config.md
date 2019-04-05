@@ -2,8 +2,8 @@
 
 How to config SLAM
 
-[Change Robot Dimensions](#change-robot-dimensions)
-[Change Velocity](#change-velocity)
+[Change Robot Dimensions](#change-robot-dimensions) <br>
+[Change Velocity](#change-velocity) <br>
 [Chnage Max Distance of Waypoint Following](#change-max-distance-of-waypoint-following)
 
 ## Change Robot Dimensions
