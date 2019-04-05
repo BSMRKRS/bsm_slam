@@ -62,16 +62,10 @@
     <param name="llsamplestep" value="0.05"/>
     <param name="lasamplerange" value="0.05"/>
     <param name="lasamplestep" value="0.05"/>
-
-    <!-- <param name="initial_pose_x" value="0"/>
-    <param name="initial_pose_y" value="0"/>
-    <param name="initial_pose_a" value="0"/> -->
   </node>
-
 
   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
       <param name="controller_frequency" value="5.0"/>
-      <!-- <param name="use_map_topic" value="true"/> -->
       <rosparam file="$(find bsm_slam)/config/costmap_common_params.yaml" command="load" ns="global_costmap" />
       <rosparam file="$(find bsm_slam)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
       <rosparam file="$(find bsm_slam)/config/local_costmap_params.yaml" command="load" />
@@ -86,7 +80,4 @@
       <!-- <remap from="scan" to="odom"/> -->
       <!-- <remap from="move_base_simple/goal" to="goal"/> -->
   </node>
-
-  <!-- <remap from="/move_base_simple/goal" to="/goal"/> -->
-
 </launch>

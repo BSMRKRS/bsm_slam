@@ -29,12 +29,9 @@
   <!-- The *_depend tags are used to specify dependencies -->
   <!-- Dependencies can be catkin packages or system dependencies -->
   <buildtool_depend>catkin</buildtool_depend>
-  <run_depend>hector_mapping</run_depend>
-  <run_depend>hector_geotiff</run_depend>
-  <run_depend>hector_trajectory_server</run_depend>
-  <run_depend>hector_geotiff_plugins</run_depend>
-  <run_depend>urg_node</run_depend>
-  <run_depend>depthimage_to_laserscan</run_depend>
+  <run_depend>gmapping</run_depend>
+  <run_depend>rplidar_ros</run_depend>
+  <run_depend>laser_scan_matcher</run_depend>
   <run_depend>tf</run_depend>
   <run_depend>rviz</run_depend>
 
